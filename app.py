@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, session #importing relevant tools 
+from flask import Flask, jsonify, request, url_for, redirect, session, render_template #importing relevant tools 
 
 app = Flask(__name__) #instantiating the app
 app.config['DEBUG'] = True
@@ -8,7 +8,8 @@ app.config['SECRET_KEY'] = 'Thisisasecret!'
 @app.route('/home/<name>', methods=['POST', 'GET']) #passes a name variable to display in the home page
 def home(name):
     session['name'] = name
-    return '<h1>Hello {}, You are on the home page</h1>'.format(name)
+    return render_template('home.html', name=name, display=False, myList=[1, 2, 3], myDict=[{'name': 'Zack'}, {'name': 'Zoe'}]) #renders an html template and includes the name variable
+    
 
 @app.route('/<person>')
 def index(person):
@@ -31,11 +32,7 @@ def query():
 
 @app.route('/form') #submit a form
 def form():
-    return '''<form method='POST' action='/process'>
-                <input type='text' name='name'>
-                <input type='text' name='location'>
-                <input type='submit' value='Submit'>
-              </form>'''
+    return render_template('form.html')
 
 @app.route('/process', methods=['POST']) #pass the form to process which outputs the details
 def process():
